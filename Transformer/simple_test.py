@@ -1,15 +1,9 @@
-import torch
-import torch.nn as nn
-import torch.nn.functional as F
-from torch.autograd import Variable
-import math
-import matplotlib.pyplot as plt
-import numpy as np
-import copy
+from top import *
 
 from MyEmbedding import MyEmbedding
 from PositionalEncoding import PositionalEncoding
 from utils import subsequent_mask, attention
+from MutiHeadAttention import MutilHeadAttention
 
 def use() :
     d_model = 512
@@ -25,10 +19,34 @@ def use() :
     query = key = value = pe_result
     mask = Variable(torch.zeros(2, 4, 4))
     attn, p_attn = attention(query=query, key=key, value=value, mask=mask)
-    
+    head = 8
+    embedding_dim = 512
+    dropout = 0.2
+    #mask = Variable(torch.zeros(8, 4, 4))
+    mha = MutilHeadAttention(head, embedding_dim, dropout)
+    mha_result = mha(query, key, value, mask)
+    print(mha_result)
+    print(mha_result.shape)
 
 if __name__ == "__main__":
     use()
+    # x = torch.randn(4, 4)
+    # print(x)
+    # y = x.view(16)
+    # print(y)
+    # print(y.size())
+    # z = x.view(-1, 8)
+    # print(z.size())
+    # print(z)
+    # a = torch.randn(1, 2, 3, 4)
+    # print(a)
+    # print(a.size())
+    # b = a.transpose(1,2)
+    # print(b.size())
+    # print(b)
+    # c = a.view(1, 2, 3, 4)
+    # print(c.size())
+    # print(c)
     # sm = subsequent_mask(5)
     # print("sm: ", sm)
     # plt.figure(figsize=(5, 5))
