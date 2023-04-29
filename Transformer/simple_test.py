@@ -4,29 +4,46 @@ from MyEmbedding import MyEmbedding
 from PositionalEncoding import PositionalEncoding
 from utils import subsequent_mask, attention
 from MutiHeadAttention import MutilHeadAttention
+from PositionwiseFeedForward import PositionwiseFeedForward
+from LayerNorm import LayerNorm
 
 def use() :
     d_model = 512
     vocab = 1000
     x = Variable(torch.LongTensor([[100, 2, 421, 508], [491, 998, 1, 221]]))
+    # 文本嵌入层
     emb = MyEmbedding(d_model, vocab)
     embr = emb(x)
     dropout = 0.1
     max_len = 60
     y = embr
+    # 位置编码层
     pe = PositionalEncoding(d_model, dropout, max_len)
     pe_result = pe(y)
     query = key = value = pe_result
     mask = Variable(torch.zeros(2, 4, 4))
+    # 注意力机制
     attn, p_attn = attention(query=query, key=key, value=value, mask=mask)
     head = 8
     embedding_dim = 512
     dropout = 0.2
-    #mask = Variable(torch.zeros(8, 4, 4))
+    # 多头注意力机制
     mha = MutilHeadAttention(head, embedding_dim, dropout)
     mha_result = mha(query, key, value, mask)
-    print(mha_result)
-    print(mha_result.shape)
+    d_ff = 64
+    dropout = 0.2
+    x = mha_result
+    ff = PositionwiseFeedForward(d_model, d_ff, dropout)
+    ff_result = ff(x)
+    # 规范化层
+    features = d_model
+    eps = 1e-6
+    x = ff_result
+    ln = LayerNorm(features, eps)
+    ln_result = ln(x)
+    print(ln_result)
+    print(ln_result.shape)
+    
 
 if __name__ == "__main__":
     use()
