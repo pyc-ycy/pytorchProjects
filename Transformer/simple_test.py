@@ -6,6 +6,7 @@ from utils import subsequent_mask, attention
 from MutiHeadAttention import MutilHeadAttention
 from PositionwiseFeedForward import PositionwiseFeedForward
 from LayerNorm import LayerNorm
+from SublayerConnection import SubLayerConnection
 
 def use() :
     d_model = 512
@@ -41,8 +42,14 @@ def use() :
     x = ff_result
     ln = LayerNorm(features, eps)
     ln_result = ln(x)
-    print(ln_result)
-    print(ln_result.shape)
+    # 子层连接结构
+    x = pe_result
+    size = d_model
+    sublayer = lambda x: mha(x, x, x, mask)
+    sc = SubLayerConnection(size, dropout)
+    sc_result = sc(x, sublayer)
+    print(sc_result)
+    print(sc_result.shape)
     
 
 if __name__ == "__main__":
