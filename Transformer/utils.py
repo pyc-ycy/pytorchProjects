@@ -1,7 +1,4 @@
-import numpy as np
-import torch
-import math
-import torch.nn.functional as F
+from top import *
 
 def subsequent_mask(size):
     # size 代表掩码张量后两个维度，形成一个方阵
@@ -36,3 +33,9 @@ def attention(query, key, value, mask=None, dropout=None):
     
     # 最后一步完成 p_attn 和 value 张量的乘法，并返回 query 的注意力表示
     return torch.matmul(p_pattn, value), p_pattn
+
+# 实现克隆函数，用于克隆线性变化层，因此需要使用 clone 函数将他们一同初始化到网络层对象列表中
+def clones(moudle, N):
+    # model: 代表要克隆的目标网络层
+    # N：将 model 克隆几个
+    return nn.ModuleList([copy.deepcopy(moudle) for _ in range(N)])

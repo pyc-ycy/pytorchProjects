@@ -1,11 +1,7 @@
 from top import *
 from utils import *
 
-# 实现克隆函数，用于克隆线性变化层，因此需要使用 clone 函数将他们一同初始化到网络层对象列表中
-def clones(moudle, N):
-    # model: 代表要克隆的目标网络层
-    # N：将 model 克隆几个
-    return nn.ModuleList([copy.deepcopy(moudle) for _ in range(N)])
+
 
 # 实现多头注意力机制
 class MutilHeadAttention(nn.Module):

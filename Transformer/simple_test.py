@@ -7,6 +7,7 @@ from MutiHeadAttention import MutilHeadAttention
 from PositionwiseFeedForward import PositionwiseFeedForward
 from LayerNorm import LayerNorm
 from SublayerConnection import SubLayerConnection
+from EncoderLayer import EncoderLayer
 
 def use() :
     d_model = 512
@@ -48,8 +49,11 @@ def use() :
     sublayer = lambda x: mha(x, x, x, mask)
     sc = SubLayerConnection(size, dropout)
     sc_result = sc(x, sublayer)
-    print(sc_result)
-    print(sc_result.shape)
+    # 编码器层
+    el = EncoderLayer(size, mha, ff, dropout)
+    el_result = el(x, mask)
+    print(el_result)
+    print(el_result.shape)
     
 
 if __name__ == "__main__":
